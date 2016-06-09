@@ -4,6 +4,8 @@ and they are correctly configured by default
 '''
 import unittest
 import sys
+import time
+import tempfile
 from processing.algs.saga.SagaUtils import *
 from processing.core.ProcessingConfig import ProcessingConfig
 from processing.algs.grass.GrassUtils import GrassUtils
@@ -53,7 +55,7 @@ def functionalTests():
 
     logTest = Test("Verify in-app message log has no errors for default install. QGIS-54")
     logTest.addStep("Open log messages panel", _openLogMessagesDialog)
-    logTest.addStep("Review 'General' tab output", isVerifyStep = True)
+    logTest.addStep("Review 'General' tab output. Check it has no issues", isVerifyStep = True)
     logTest.addStep("Check there are no errors in 'Plugins' tab", isVerifyStep = True)
     logTest.addStep("Check there is no 'Python warning' tab", isVerifyStep = True)
     logTest.addStep("Check there is no 'Qt' tab", isVerifyStep = True)
@@ -107,8 +109,17 @@ class PackageTests(unittest.TestCase):
             self.assertTrue(layer.isValid())
             #QgsMapLayerRegistry.instance().addMapLayer(layer)
 
+    def testGeoPackage(self):
+        '''Test GeoPackage'''
+        layer = QgsVectorLayer(os.path.join(os.path.dirname(__file__), "data","airports.gpkg"),
+                                    "test", "ogr")
+        self.assertTrue(layer.isValid())
+        filepath = os.path.join(tempfile.mkdtemp(), str(time.time()) + ".gpkg")
+        QgsVectorFileWriter.writeAsVectorFormat(layer, filepath, 'utf-8', layer.crs(), 'GPKG') 
+        layer = QgsVectorLayer(filepath, "test", "ogr")
+        self.assertTrue(layer.isValid())
 
-
+        
 
 def unitTests():
     return unittest.makeSuite(PackageTests, 'test')
