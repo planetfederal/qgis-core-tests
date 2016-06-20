@@ -177,9 +177,9 @@ GDAL_EXPECTED_FORMATS = [
 
 OGR_EXPECTED_FORMATS = [
     #'JP2ECW', # No Mac
-    'FileGDB',
-    'OCI',
-    'SOSI',
+    #'FileGDB',
+    #'OCI',
+    #'SOSI',
     'PCIDSK',
     'JP2OpenJPEG',
     'PDF',
@@ -209,9 +209,9 @@ OGR_EXPECTED_FORMATS = [
     'WAsP',
     'PGeo',
     'MSSQLSpatial',
-    'OGR_OGDI',
+    #'OGR_OGDI',
     'PostgreSQL',
-    'MySQL',
+    #'MySQL',
     'OpenFileGDB',
     'XPlane',
     'DXF',
@@ -231,7 +231,7 @@ OGR_EXPECTED_FORMATS = [
     'Geomedia',
     'EDIGEO',
     'GFT',
-    'GME',
+    #'GME',
     'SVG',
     'CouchDB',
     'Cloudant',
@@ -291,11 +291,11 @@ class TestSupportedFormats(unittest.TestCase):
 
     def test_OGRFormats(self):
         """Test that all required formats are enabled"""
-        process = subprocess.Popen(['gdalinfo', '--formats'],
+        process = subprocess.Popen(['ogrinfo', '--formats'],
                                    stdout=subprocess.PIPE)
         out, err = process.communicate()
         formats = [f.strip().split(' ')[0] for f in out.split("\n")[1:] if f]
-        for f in GDAL_EXPECTED_FORMATS:
+        for f in OGR_EXPECTED_FORMATS:
             self.assertTrue(f in formats,
                             "OGR Format %s is not supported!" % f)
 
