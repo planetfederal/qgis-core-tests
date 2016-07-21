@@ -17,8 +17,8 @@ install:
     - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh ${PLUGIN_NAME}"
 
     # Build the plugin
-    - docker exec -it qgis-testing-environment sh -c "pip install paver"
-    - docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup"
+    #- docker exec -it qgis-testing-environment sh -c "pip install paver"
+    #- docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup"
     - docker exec -it qgis-testing-environment sh -c "ln -s /tests_directory/${PLUGIN_NAME} /root/.qgis2/python/plugins/${PLUGIN_NAME}"
 
 script:

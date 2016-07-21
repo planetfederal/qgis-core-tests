@@ -62,6 +62,9 @@ def functionalTests():
 
 
 def unitTests():
-    suite = unittest.makeSuite(PackageTests, 'package_test')
-    suite.addTests([TestImports, TestSupportedFormats, TestOtherCommandLineUtilities])
+    suite = unittest.TestSuite()
+    suite.addTests(unittest.makeSuite(PackageTests))
+    suite.addTests(unittest.makeSuite(TestImports))
+    suite.addTests(unittest.makeSuite(TestSupportedFormats))
+    suite.addTests(unittest.makeSuite(TestOtherCommandLineUtilities))
     return suite
