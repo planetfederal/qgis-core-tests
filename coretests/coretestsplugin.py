@@ -7,13 +7,13 @@
 class CoreTestsPlugin:
 
     def __init__(self, iface):
-        self.iface = iface        
+        self.iface = iface
         try:
             from tests import testerplugin
             from qgistester.tests import addTestModule
             addTestModule(testerplugin, "Core Tests")
         except:
-            pass        
+            pass
 
 
     def initGui(self):
