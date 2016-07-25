@@ -17,7 +17,7 @@
 name=Core QGIS tests
 qgisMinimumVersion=2.0
 description=Core tests for Tester Plugin
-about=
+about=Core QGIS tests and sample data for Tester Plugin
 version=1.0
 author=Victor Olaya (Boundless)
 email=volaya@boundlessgeo.com
