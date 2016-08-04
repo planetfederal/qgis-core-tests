@@ -40,7 +40,7 @@ def functionalTests():
     spatialiteTest = Test("Test Spatialite. QGIS-72")
     spatialiteTest.addStep("Load Spatialite layer", _loadSpatialite)
     spatialiteTest.addStep("Open DB Manager", _openDBManager)
-    spatialiteTest.addStep("Check that 'elk' layer is available in DB manager")
+    spatialiteTest.addStep("Check that 'test' layer is available in DB manager, in 'Virtual layers/QGIS layers'")
 
     aboutTest = Test("Verify dependency versions and providers in About dialog. QGIS-53")
     aboutTest.addStep("Open About dialog", _openAboutDialog)
@@ -54,9 +54,7 @@ def functionalTests():
     logTest.addStep("Open log messages panel", _openLogMessagesDialog)
     logTest.addStep("Review 'General' tab output. Check it has no issues", isVerifyStep = True)
     logTest.addStep("Check there are no errors in 'Plugins' tab", isVerifyStep = True)
-    logTest.addStep("Check there is no 'Python warning' tab", isVerifyStep = True)
-    logTest.addStep("Check there is no 'Qt' tab", isVerifyStep = True)
-    logTest.addStep("Check there is no other tab", isVerifyStep = True)
+    logTest.addStep("Check there are no errors in 'Qt' tab", isVerifyStep = True)
 
     return [spatialiteTest, aboutTest, logTest]
 
