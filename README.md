@@ -6,7 +6,7 @@ This repository also hosts other Python tests that are not meant to be run
 from the tester plugin inside QGIS, like the tests for the command
 line utilities and Python modules.
 
-# Tests list:
+# Tests list for the Tester plugin:
 
 ## Manual and semi-automated tests
 
