@@ -25,3 +25,6 @@ script:
     # Run the unit tests
     # This plugin has not yet any unit tests
     - docker exec -it qgis-testing-environment sh -c "echo '${PLUGIN_NAME} has no unit tests yet, please create them and add here'"
+notifications:
+  slack:
+    secure: ApMhim4dMcIieh+uDARyv0wqufyg0z+ROnzGnzQ2ecQTAB5h/NOVrBy4ZJC0oVjtFlGwfKft/bvrjWKcEWmpBoirHrSjNPMGoGMNQPmtrnZR6mze35Y1wa5RYOH4v5Dp9OIcLFoh+JfSsMciV63qOYXtQXqLY/XGcNJjiPkr2CHcGjItz6GER6nrxV2+n0gIH2nQlybfm57yPQyojwArx/ZTPbnVL5uXSl4pXYSdd1omhWjB+wVfNV0EF+AMFnDbm2ppr2BvVHWGrphIpFX75ZbcN5mHMOZ3ba/mo1tfrKP9OQQ2AT5SaHab20p7Mx7DFqycddPejZ4sOrWhlC7/WZcD4+Dbl9W7N7sR6pLhvnD8UOSFB477MCOJRJolEd8OtDP2tB3wjDMa7cwr7hnF+WmqjUYpPiqHqSvR/8Ek9tmirooMoZ9c7Stvm4GSVyFVBtF7B4TUNf21j/2RMzWG1y9PO3cRB5mqoHmMdpAPIMjWbQrSs+i/JE9dxjZUJt18yQYFsehxkOC48GlnQBc9uordFDVc/ZW8RJbgyju8iBHKhibYVur2GAqNwvzsbr/YGu5fp+jTAxr0qmrEXlHccth9xFvXHhfHLVZPd1SLqOT7opHhF9LmlbwOJJjfTPSOON3EjmBuUr1qoJhgazO70LcFLEyxiBooXWAf4G/JLyo=
