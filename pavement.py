@@ -59,7 +59,7 @@ def install(options):
     _install(".qgis2")
 
 @task
-def install-dev(options):
+def installdev(options):
     _install(".qgis-dev")
 
 @task
