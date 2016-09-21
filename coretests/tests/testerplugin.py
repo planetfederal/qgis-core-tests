@@ -9,7 +9,6 @@ from processing.algs.otb.OTBUtils import *
 from qgis.utils import plugins, iface
 from qgis.core import *
 import os
-from qgistester.test import Test
 from packages_tests import PackageTests
 from platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
 
@@ -37,6 +36,11 @@ def _openAboutDialog():
     iface.actionAbout().trigger()
 
 def functionalTests():
+    try:
+        from qgistester.test import Test
+    except:
+        return []
+        
     spatialiteTest = Test("Test Spatialite. QGIS-72")
     spatialiteTest.addStep("Load Spatialite layer", _loadSpatialite)
     spatialiteTest.addStep("Open DB Manager", _openDBManager)
