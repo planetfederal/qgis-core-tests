@@ -60,3 +60,5 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+travis_secrets.tar.gz
+travis_secrets.tar.gz

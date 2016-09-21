@@ -40,7 +40,7 @@ def functionalTests():
         from qgistester.test import Test
     except:
         return []
-        
+
     spatialiteTest = Test("Test Spatialite. QGIS-72")
     spatialiteTest.addStep("Load Spatialite layer", _loadSpatialite)
     spatialiteTest.addStep("Open DB Manager", _openDBManager)
@@ -70,3 +70,7 @@ def unitTests():
     suite.addTests(unittest.makeSuite(TestSupportedFormats))
     suite.addTests(unittest.makeSuite(TestOtherCommandLineUtilities))
     return suite
+
+
+def run_all():
+    unittest.TextTestRunner(verbosity=3, stream=sys.stdout).run(unitTests())

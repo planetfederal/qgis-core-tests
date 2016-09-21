@@ -1,30 +1,49 @@
 sudo: required
 addons:
   hosts:
-    - boundless-test
+  - boundless-test
 services:
-    - docker
+- docker
 env:
-    - PLUGIN_NAME=boundless-test
+  global:
+  - PLUGIN_NAME=coretest
+  - secure: FG4rSWiPJXexmBdkecCcUyjYlxbTXbifwhEcWLS+neP4gn6g9ms/E+tyvDxFOXUa/0lelTDOAsHqzS1OwK/77j9eal/EeyHTsU66CUklz9JbyGfquhAs7YvLt6hYUmj8cnXTWcl24kLE3UaARtmnH7DrQAIemd3zeVrOhSI0iS4BFkQCdXnUMOTjH3iuk8VdFBWlnUAV7FuTIffv9wx8dgSAix0/ZFNTZl9zUO9E7VNFfvjEmOWwzKl+pwvQSfdgC2kV5bwntXfD7Nbo7rYrqAIJPWS42fVxBqoCaVtyTWwHwqPRySufc07aih1XvOm8sNiayjExgq+KTkq7qc+FRlEGYgY9fymXn6efeHA3rgiv0GTf6PrG/KdhJxYS3NtSY4If72DQGwxu/C6AoBdtw2hinwJqKwPyiT/26JE35L0rHkT6GQ3LWulvGK+uW3j4YYIlQrxpTh5oFEGhOWlehJtZNNfZmD1dE20vtfDl5W8pWIXnr+UitwHy8lPahupLI4jBeOkTbW+BtSZYd5kaTBlkFiMPw6NNcp9XqCAEJrK5Kdwzj+EcgPoCzMS51p/pdhOAe4NrFCThKo2g2zA2Aat67JUakveh2M0Jv6L1iZN95HP8N9KsUDZqKz0YR8c/Cvfok+uGR8IO95MWr+4dDl28QmY3rl79C70Gm86fLxE=
+  - secure: IXngjLbSrur4gqkgBjBJ11vPVsQnZmbqPXqPro015wHhn7kwhpK+8FdnNLdeRIDxWeJjBmX4EHJcr9yAYweUEHFPOCGMZzISpIHZ8Wsf/1ZS3uHfUt7WP7Xf5htx2yxzWazLI4sLFjcSng1gV84DZnql5dxyPhUCAwSiU9mrcA1WFtOZkLf5zsjYsThvDgn3NQqO1xSmEztNoTGm3DonH0dy3PqKr5HN2izLxN93+fHUnsqWT5CFLdcFaKW0yQ68CpTswF9D4dtxjr+NT8mgvOI6s7sulpTh2ok2q83X7ooCF+DNBD664T3067bd6bGpsMGzwhnYl1/y8KsKQx0fCA+jDlGC6/yEQzhI+sB6biyt8pGNIo5Dnv1WcikisgebM4HMyuIJZYvph9YILZDZBiszKQF49rNGjGEwhdbnTkyz9oeni1lpTV83pxDlTlshEkAlfnRuRMDp6+n21lyXdjE9oe17SaKTw2R8kzivhGgAWIEEMHUFL5dJcodZYL/bvdPZr7K+q2DUxoiyhDtnBPBiKaqHso37KCadc4gFSMFvzc1xXIIp3LDxV+g+vNTlOyY0HlWVgyaJrRSRE9obpsUfFu7p2OzxEBbJjzQYry8pW8Gk8oduGtSbYxuO0xDS8tSxdLG7w3GxyayE7PNhZ2/lFFr/4Dt9jFJ7Inv3i+8=
+  matrix:
+  - QGIS_VERSION_TAG=release
+  - QGIS_VERSION_TAG=master_2
+  - QGIS_VERSION_TAG=master
+matrix:
+  allow_failures:
+  - env: QGIS_VERSION_TAG=master
 before_install:
-    - docker pull elpaso/qgis-testing-environment:latest
-    - docker tag elpaso/qgis-testing-environment:latest qgis-testing-environment
+- docker pull elpaso/qgis-testing-environment:${QGIS_VERSION_TAG}
+- docker tag elpaso/qgis-testing-environment:${QGIS_VERSION_TAG} qgis-testing-environment
 install:
-    - docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e DISPLAY=:99 qgis-testing-environment
-    - sleep 10
-
-    # Setup QGIS to avoid modals and install test auth db
-    - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh ${PLUGIN_NAME}"
-
-    # Build the plugin
-    #- docker exec -it qgis-testing-environment sh -c "pip install paver"
-    #- docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup"
-    - docker exec -it qgis-testing-environment sh -c "ln -s /tests_directory/${PLUGIN_NAME} /root/.qgis2/python/plugins/${PLUGIN_NAME}"
-
+- docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e DISPLAY=:99 qgis-testing-environment
+- sleep 10
+- docker exec -it qgis-testing-environment sh -c "qgis_setup.sh $PLUGIN_NAME"
+- docker exec -it qgis-testing-environment sh -c "pip install paver"
+- docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup"
+- docker exec -it qgis-testing-environment sh -c "mkdir -p /root/.qgis2/python/plugins/"
+- docker exec -it qgis-testing-environment sh -c "ln -s /tests_directory/$PLUGIN_NAME /root/.qgis2/python/plugins/$PLUGIN_NAME"
 script:
-    # Run the unit tests
-    # This plugin has not yet any unit tests
-    - docker exec -it qgis-testing-environment sh -c "echo '${PLUGIN_NAME} has no unit tests yet, please create them and add here'"
+- docker exec -it qgis-testing-environment sh -c "echo '${PLUGIN_NAME} unit tests are disabled because they are meant to be run on BD platforms'"
 notifications:
   slack:
-    secure: ApMhim4dMcIieh+uDARyv0wqufyg0z+ROnzGnzQ2ecQTAB5h/NOVrBy4ZJC0oVjtFlGwfKft/bvrjWKcEWmpBoirHrSjNPMGoGMNQPmtrnZR6mze35Y1wa5RYOH4v5Dp9OIcLFoh+JfSsMciV63qOYXtQXqLY/XGcNJjiPkr2CHcGjItz6GER6nrxV2+n0gIH2nQlybfm57yPQyojwArx/ZTPbnVL5uXSl4pXYSdd1omhWjB+wVfNV0EF+AMFnDbm2ppr2BvVHWGrphIpFX75ZbcN5mHMOZ3ba/mo1tfrKP9OQQ2AT5SaHab20p7Mx7DFqycddPejZ4sOrWhlC7/WZcD4+Dbl9W7N7sR6pLhvnD8UOSFB477MCOJRJolEd8OtDP2tB3wjDMa7cwr7hnF+WmqjUYpPiqHqSvR/8Ek9tmirooMoZ9c7Stvm4GSVyFVBtF7B4TUNf21j/2RMzWG1y9PO3cRB5mqoHmMdpAPIMjWbQrSs+i/JE9dxjZUJt18yQYFsehxkOC48GlnQBc9uordFDVc/ZW8RJbgyju8iBHKhibYVur2GAqNwvzsbr/YGu5fp+jTAxr0qmrEXlHccth9xFvXHhfHLVZPd1SLqOT7opHhF9LmlbwOJJjfTPSOON3EjmBuUr1qoJhgazO70LcFLEyxiBooXWAf4G/JLyo=
+    secure: P+blcAlU9Zv3TzsOZT1omGgJHP4gBQwRXwiYAIai4ox1bK4lDvVYd00qKWRrfi8gY/Xbn/3VBAoyRAvbWYx3jpocFlCSkmOH9icfk1/G/Mh999KrY/GGBzy9tx6u4/Bv9+lla6nd66EGa3Bacy/Yj9vVSLNkT1hYQEhJNSLQz4GJvjmAW4xRZTJX/DUeqgXlF3SR8rabAKVTcBdCtMiG/vJKz0ONp1AWwF6/gcxQIPQwt8qMmHk0dpio7FDXxhnGjdb3ayRLBUQaSKkTfKDIs4CPb7OU4CIAtjWlNq2BRaf846f+0YDpJl71XZjJEIqbfxj9l2SNttu42JNDdVkBC08p9obWDdHgPrXIKY3w2OWvX2lSG5x1DlhjXRuu3YkmYRI+XBi8iNi32vMNJnwoq4BEo2eJtB53/9UZ95RtdTpPtuvQ7vUlEkPs8tzxA+YAAY7o103ZMbAtFx8b7hfewAtTNcjAy6FmkCoH+tL/EMAhYdY7qielZqpk/JN7BODhs+2VC7ZwI8h3o58SrYk77ISdmZg+s2Z4Wrpdc2o+TpxP0GaoVdB6NsExg0gztX7RzqmUD84ltTBs/fdXZ85jxh9m30mC3Kw4PYpDhzTBsFqiHFgo7fGrLwDVnL/U1wesC8GYWkpXhUzK8V027lGW6PRnefEP800splpxQM7Ha5g=
+after_success:
+- mkdir /home/travis/.ssh/
+- chmod 700 /home/travis/.ssh/
+- openssl aes-256-cbc -K $encrypted_7bcfe3fa2019_key -iv $encrypted_7bcfe3fa2019_iv  -in travis_secrets.tar.gz.enc -out travis_secrets.tar.gz -d
+- tar xzvf travis_secrets.tar.gz
+- mv id_rsa.qgisrepoguest /home/travis/.ssh/id_rsa.qgisrepoguest
+- mv ssh_config /home/travis/.ssh/config
+- chmod 600 /home/travis/.ssh/id_rsa.qgisrepoguest
+- chmod 600 /home/travis/.ssh/config
+- docker exec qgis-testing-environment sh -c "cd /tests_directory && paver package --test"
+- export RELEASE_ZIPNAME=${PLUGIN_NAME}.zip
+- echo "Uploading ${RELEASE_ZIPNAME} to QGIS Dev..."
+- scp ${PLUGIN_NAME}.zip qgisrepoguest:${UPLOADS}/${RELEASE_ZIPNAME}
+- export GIT_REV=$(git rev-parse --short HEAD)
+- ssh qgisrepoguest "${UPDATER} update --dev --role DesktopPartner,DesktopDeveloper --git-hash ${GIT_REV} ${RELEASE_ZIPNAME}"
