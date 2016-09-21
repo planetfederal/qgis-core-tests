@@ -17,12 +17,11 @@ import shutil
 
 options(
     plugin = Bunch(
-        name = 'coretests',        
+        name = 'coretests',
         source_dir = path('coretests'),
         package_dir = path('.'),
         tests = ['test', 'tests'],
         excludes = [
-            'metadata.*',
             '*.pyc',
             ".git"
         ]
