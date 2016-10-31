@@ -244,7 +244,7 @@ OGR_EXPECTED_FORMATS = [
     'XLSX',
     'ElasticSearch',
     'Walk',
-    'CartoDB',
+    'Carto',
     'SXF',
     'Selafin',
     'JML',
