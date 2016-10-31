@@ -277,6 +277,10 @@ class TestImports(unittest.TestCase):
         """Test that numpy can be imported"""
         import numpy
 
+    def test_IPythonImports(self):
+        """Test that IPython can be imported"""
+        import IPython
+
 
 class TestSupportedFormats(unittest.TestCase):
     """Test that GDAL OGR formats are available"""
