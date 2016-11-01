@@ -7,7 +7,7 @@ import time
 import tempfile
 from processing.algs.saga.SagaUtils import *
 from processing.core.ProcessingConfig import ProcessingConfig
-from processing.algs.grass.GrassUtils import GrassUtils
+from processing.algs.grass7.Grass7Utils import Grass7Utils
 from processing.algs.otb.OTBUtils import *
 from qgis.utils import active_plugins
 from qgis.core import *
@@ -30,11 +30,11 @@ class PackageTests(unittest.TestCase):
 
     def testGrass(self):
         '''Test GRASS is installed QGIS-89 (2)'''
-        folder = ProcessingConfig.getSetting(GrassUtils.GRASS_FOLDER)
-        ProcessingConfig.removeSetting(GrassUtils.GRASS_FOLDER)
-        msg = GrassUtils.checkGrassIsInstalled()
+        folder = ProcessingConfig.getSetting(Grass7Utils.GRASS_FOLDER)
+        ProcessingConfig.removeSetting(Grass7Utils.GRASS_FOLDER)
+        msg = Grass7Utils.checkGrass7IsInstalled()
         self.assertIsNone(msg)
-        ProcessingConfig.setSettingValue(GrassUtils.GRASS_FOLDER, folder)
+        ProcessingConfig.setSettingValue(Grass7Utils.GRASS_FOLDER, folder)
 
     def testOtb(self):
         '''Test OTB is installed QGIS-89 (3)'''
