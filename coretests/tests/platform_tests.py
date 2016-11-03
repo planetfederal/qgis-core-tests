@@ -287,7 +287,10 @@ class TestSupportedFormats(unittest.TestCase):
 
     def test_GDALFormats(self):
         """Test that all required formats are enabled"""
-        process = subprocess.Popen(['gdalinfo', '--formats'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(['gdalinfo', '--formats'],
+                                   stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
         out, err = process.communicate()
         formats = [f.strip().split(' ')[0] for f in out.split("\n")[1:] if f]
         for f in GDAL_EXPECTED_FORMATS:
@@ -296,7 +299,9 @@ class TestSupportedFormats(unittest.TestCase):
     def test_OGRFormats(self):
         """Test that all required formats are enabled"""
         process = subprocess.Popen(['ogrinfo', '--formats'],
-                                   stdout=subprocess.PIPE)
+                                   stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
         out, err = process.communicate()
         formats = [f.strip().split(' ')[0] for f in out.split("\n")[1:] if f]
         for f in OGR_EXPECTED_FORMATS:
@@ -313,7 +318,10 @@ class TestOtherCommandLineUtilities(unittest.TestCase):
         for utility in COMMAND_LINE_UTILITIES:
             try:
                 command = utility.split(' ')
-                subprocess.check_call(command, shell=system == 'Windows')
+                subprocess.check_call(command, shell=system == 'Windows',
+                                               stdin=subprocess.PIPE,
+                                               stdout=subprocess.PIPE,
+                                               stderr=subprocess.PIPE)
             except subprocess.CalledProcessError, e:
                 print("Utility %s exited with : %s" % (utility, e.returncode))
             except Exception, e:
