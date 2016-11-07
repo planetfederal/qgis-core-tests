@@ -24,7 +24,7 @@ class PackageTests(unittest.TestCase):
             ProcessingConfig.removeSetting(SAGA_FOLDER)
         except:
             hasSetting = False
-        self.assertTrue(getSagaInstalledVersion(True) in ["2.1.2", "2.1.3", "2.1.4", "2.2.0"])
+        self.assertTrue(getSagaInstalledVersion(True) in ["2.1.2", "2.1.3", "2.1.4", "2.2.0", "2.2.2"])
         if hasSetting:
             ProcessingConfig.setSettingValue(SAGA_FOLDER, folder)
 
