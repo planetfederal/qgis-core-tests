@@ -44,11 +44,11 @@ COMMAND_LINE_UTILITIES = [
 ]
 
 GDAL_EXPECTED_FORMATS = [
-    #'ECW', # No Mac
-    #'JP2ECW', # No Mac
+    'ECW',
+    'JP2ECW',
     #'GeoRaster', # No Mac
-    #'MG4Lidar', # No Mac
-    #'MrSID', # No Mac
+    'MG4Lidar',
+    'MrSID',
     'VRT',
     'GTiff',
     'NITF',
@@ -176,10 +176,10 @@ GDAL_EXPECTED_FORMATS = [
 
 
 OGR_EXPECTED_FORMATS = [
-    #'JP2ECW', # No Mac
-    #'FileGDB',
+    'JP2ECW',
+    'FileGDB',
     #'OCI',
-    #'SOSI',
+    'SOSI',
     'PCIDSK',
     'JP2OpenJPEG',
     'PDF',
