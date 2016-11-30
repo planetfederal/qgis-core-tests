@@ -2,16 +2,19 @@
 Tests to ensure that a QGIS installation contains Processing dependencies
 and they are correctly configured by default
 '''
-import unittest
+from builtins import str
+import os
 import time
 import tempfile
-from processing.algs.saga.SagaUtils import *
+import unittest
+
+from qgis.utils import active_plugins
+from qgis.core import QgsVectorLayer, QgsVectorFileWriter
+
+from processing.algs.saga.SagaUtils import SAGA_FOLDER, getSagaInstalledVersion
 from processing.core.ProcessingConfig import ProcessingConfig
 from processing.algs.grass7.Grass7Utils import Grass7Utils
-from processing.algs.otb.OTBUtils import *
-from qgis.utils import active_plugins
-from qgis.core import *
-import os
+from processing.algs.otb.OTBUtils import findOtbPath
 
 
 class PackageTests(unittest.TestCase):
@@ -57,7 +60,6 @@ class PackageTests(unittest.TestCase):
                                     "ESRI_FileGDB-API_sample_Topo.gdb|layername=%s" % layername),
                                     "test", "ogr")
             self.assertTrue(layer.isValid())
-            #QgsMapLayerRegistry.instance().addMapLayer(layer)
 
     def testGeoPackage(self):
         '''Test GeoPackage'''
@@ -68,7 +70,6 @@ class PackageTests(unittest.TestCase):
         QgsVectorFileWriter.writeAsVectorFormat(layer, filepath, 'utf-8', layer.crs(), 'GPKG')
         layer = QgsVectorLayer(filepath, "test", "ogr")
         self.assertTrue(layer.isValid())
-
 
 
 if __name__ == '__main__':

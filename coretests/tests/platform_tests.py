@@ -22,6 +22,7 @@
 *                                                                         *
 ***************************************************************************
 """
+from __future__ import print_function
 
 __author__ = 'Alessandro Pasotti'
 __date__ = '2016/06/20'
@@ -322,9 +323,9 @@ class TestOtherCommandLineUtilities(unittest.TestCase):
                                                stdin=subprocess.PIPE,
                                                stdout=subprocess.PIPE,
                                                stderr=subprocess.PIPE)
-            except subprocess.CalledProcessError, e:
+            except subprocess.CalledProcessError as e:
                 print("Utility %s exited with : %s" % (utility, e.returncode))
-            except Exception, e:
+            except Exception as e:
                 raise AssertionError("Utility %s cannot run: %s" % (utility, e))
 
 

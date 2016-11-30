@@ -2,15 +2,16 @@
 Tests to ensure that a QGIS installation contains Processing dependencies
 and they are correctly configured by default
 '''
-import unittest
-import sys
-from processing.algs.saga.SagaUtils import *
-from processing.algs.otb.OTBUtils import *
-from qgis.utils import plugins, iface
-from qgis.core import *
+
 import os
-from packages_tests import PackageTests
-from platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
+import sys
+import unittest
+
+from qgis.utils import plugins, iface
+from qgis.core import QgsDataSourceURI, QgsVectorLayer, QgsMapLayerRegistry
+
+from coretests.tests.packages_tests import PackageTests
+from coretests.tests.platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
 
 
 def _loadSpatialite():
@@ -25,12 +26,11 @@ def _loadSpatialite():
     QgsMapLayerRegistry.instance().addMapLayer(layer)
 
 def _openDBManager():
-        plugins["db_manager"].run()
+    plugins["db_manager"].run()
 
 def _openLogMessagesDialog():
     widgets = [el for el in iface.mainWindow().children() if el.objectName() == "MessageLog"]
     widgets[0].setVisible(True)
-
 
 def _openAboutDialog():
     iface.actionAbout().trigger()

@@ -1,19 +1,18 @@
+from builtins import range
 # -*- coding: utf-8 -*-
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
-from cStringIO import StringIO
-import ConfigParser
-from datetime import date, datetime
-import fnmatch
+
 import os
+import fnmatch
+import zipfile
+import shutil
+
 from paver.easy import *
 # this pulls in the sphinx target
 from paver.doctools import html
-import xmlrpclib
-import zipfile
-import shutil
 
 options(
     plugin = Bunch(
@@ -33,7 +32,6 @@ options(
         builddir = 'build'
     )
 )
-
 
 
 @task
@@ -85,7 +83,7 @@ def make_zip(zip, options):
     def filter_excludes(files):
         if not files: return []
         # to prevent descending into dirs, modify the list in place
-        for i in xrange(len(files) - 1, -1, -1):
+        for i in range(len(files) - 1, -1, -1):
             f = files[i]
             if exclude(f):
                 files.remove(f)

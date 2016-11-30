@@ -5,5 +5,5 @@
 #
 
 def classFactory(iface):
-    from coretestsplugin import CoreTestsPlugin
+    from coretests.coretestsplugin import CoreTestsPlugin
     return CoreTestsPlugin(iface)

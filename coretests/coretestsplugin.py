@@ -1,3 +1,4 @@
+from builtins import object
 # -*- coding: utf-8 -*-
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
@@ -5,18 +6,18 @@
 #
 
 from qgis.core import QgsMessageLog
-class CoreTestsPlugin:
+
+class CoreTestsPlugin(object):
 
     def __init__(self, iface):
         self.iface = iface
         try:
-            from tests import testerplugin
+            from coretests.tests import testerplugin
             from qgistester.tests import addTestModule
             addTestModule(testerplugin, "Core Tests")
-        except Exception, e:
+        except Exception as e:
             QgsMessageLog.logMessage("Tests could not be loaded! %s" % e,
                                      level=QgsMessageLog.CRITICAL)
-
 
     def initGui(self):
         pass
