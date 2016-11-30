@@ -10,9 +10,9 @@ env:
   - secure: FG4rSWiPJXexmBdkecCcUyjYlxbTXbifwhEcWLS+neP4gn6g9ms/E+tyvDxFOXUa/0lelTDOAsHqzS1OwK/77j9eal/EeyHTsU66CUklz9JbyGfquhAs7YvLt6hYUmj8cnXTWcl24kLE3UaARtmnH7DrQAIemd3zeVrOhSI0iS4BFkQCdXnUMOTjH3iuk8VdFBWlnUAV7FuTIffv9wx8dgSAix0/ZFNTZl9zUO9E7VNFfvjEmOWwzKl+pwvQSfdgC2kV5bwntXfD7Nbo7rYrqAIJPWS42fVxBqoCaVtyTWwHwqPRySufc07aih1XvOm8sNiayjExgq+KTkq7qc+FRlEGYgY9fymXn6efeHA3rgiv0GTf6PrG/KdhJxYS3NtSY4If72DQGwxu/C6AoBdtw2hinwJqKwPyiT/26JE35L0rHkT6GQ3LWulvGK+uW3j4YYIlQrxpTh5oFEGhOWlehJtZNNfZmD1dE20vtfDl5W8pWIXnr+UitwHy8lPahupLI4jBeOkTbW+BtSZYd5kaTBlkFiMPw6NNcp9XqCAEJrK5Kdwzj+EcgPoCzMS51p/pdhOAe4NrFCThKo2g2zA2Aat67JUakveh2M0Jv6L1iZN95HP8N9KsUDZqKz0YR8c/Cvfok+uGR8IO95MWr+4dDl28QmY3rl79C70Gm86fLxE=
   - secure: IXngjLbSrur4gqkgBjBJ11vPVsQnZmbqPXqPro015wHhn7kwhpK+8FdnNLdeRIDxWeJjBmX4EHJcr9yAYweUEHFPOCGMZzISpIHZ8Wsf/1ZS3uHfUt7WP7Xf5htx2yxzWazLI4sLFjcSng1gV84DZnql5dxyPhUCAwSiU9mrcA1WFtOZkLf5zsjYsThvDgn3NQqO1xSmEztNoTGm3DonH0dy3PqKr5HN2izLxN93+fHUnsqWT5CFLdcFaKW0yQ68CpTswF9D4dtxjr+NT8mgvOI6s7sulpTh2ok2q83X7ooCF+DNBD664T3067bd6bGpsMGzwhnYl1/y8KsKQx0fCA+jDlGC6/yEQzhI+sB6biyt8pGNIo5Dnv1WcikisgebM4HMyuIJZYvph9YILZDZBiszKQF49rNGjGEwhdbnTkyz9oeni1lpTV83pxDlTlshEkAlfnRuRMDp6+n21lyXdjE9oe17SaKTw2R8kzivhGgAWIEEMHUFL5dJcodZYL/bvdPZr7K+q2DUxoiyhDtnBPBiKaqHso37KCadc4gFSMFvzc1xXIIp3LDxV+g+vNTlOyY0HlWVgyaJrRSRE9obpsUfFu7p2OzxEBbJjzQYry8pW8Gk8oduGtSbYxuO0xDS8tSxdLG7w3GxyayE7PNhZ2/lFFr/4Dt9jFJ7Inv3i+8=
   matrix:
-  - QGIS_VERSION_TAG=release
-  - QGIS_VERSION_TAG=master_2
-  - QGIS_VERSION_TAG=master
+  - QGIS_VERSION_TAG=release PYTHON_EXECUTABLE=python PIP_EXECUTABLE=pip
+  - QGIS_VERSION_TAG=master_2 PYTHON_EXECUTABLE=python PIP_EXECUTABLE=pip
+  - QGIS_VERSION_TAG=master PYTHON_EXECUTABLE=python3 PIP_EXECUTABLE=pip3
 matrix:
   allow_failures:
   - env: QGIS_VERSION_TAG=master
@@ -23,7 +23,7 @@ install:
 - docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e DISPLAY=:99 qgis-testing-environment
 - sleep 10
 - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh $PLUGIN_NAME"
-- docker exec -it qgis-testing-environment sh -c "pip install paver"
+- docker exec -it qgis-testing-environment sh -c "$PIP_EXECUTABLE install paver"
 - docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup && paver package --tests"
 - docker exec -it qgis-testing-environment sh -c "mkdir -p /root/.qgis2/python/plugins/"
 - docker exec -it qgis-testing-environment sh -c "ln -s /tests_directory/$PLUGIN_NAME /root/.qgis2/python/plugins/$PLUGIN_NAME"
