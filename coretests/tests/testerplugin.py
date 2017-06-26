@@ -10,7 +10,7 @@ import unittest
 from qgis.utils import plugins, iface
 from qgis.core import QgsDataSourceURI, QgsVectorLayer, QgsMapLayerRegistry
 
-#~ from coretests.tests.packages_tests import PackageTests
+from coretests.tests.packages_tests import PackageTests
 #~ from coretests.tests.platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
 
 testPath = os.path.dirname(__file__)
@@ -82,13 +82,13 @@ def functionalTests():
     return [spatialiteTest, logTest, aboutTest]
 
 
-#~ def unitTests():
-    #~ suite = unittest.TestSuite()
-    #~ suite.addTests(unittest.makeSuite(PackageTests))
+def unitTests():
+    suite = unittest.TestSuite()
+    suite.addTests(unittest.makeSuite(PackageTests))
     #~ suite.addTests(unittest.makeSuite(TestImports))
     #~ suite.addTests(unittest.makeSuite(TestSupportedFormats))
     #~ suite.addTests(unittest.makeSuite(TestOtherCommandLineUtilities))
-    #~ return suite
+    return suite
 
 
 def run_all():
