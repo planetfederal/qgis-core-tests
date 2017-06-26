@@ -64,9 +64,12 @@ def functionalTests():
     else:
         filePath = os.path.join(testPath, "data", "about.windows")
     with open(filePath) as f:
-        data = f.read()
+        content = f.readlines()
+    data = ""
+    for line in content:
+        data += "<p>{}</p>".format(line)
     aboutTest.addStep("Verify that content of the About dialog matches"
-                      "following data\n{}".format(data),
+                      "following data\n{}\n\n".format(data),
                       isVerifyStep=True)
 
     logTest = Test("Verify in-app message log has no errors for default install. QGIS-54")
