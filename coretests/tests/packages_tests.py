@@ -31,6 +31,7 @@ class PackageTests(unittest.TestCase):
         if hasSetting:
             ProcessingConfig.setSettingValue(SAGA_FOLDER, folder)
 
+
     def testGrass(self):
         '''Test GRASS is installed QGIS-89 (2)'''
         folder = ProcessingConfig.getSetting(Grass7Utils.GRASS_FOLDER)
@@ -39,16 +40,19 @@ class PackageTests(unittest.TestCase):
         self.assertIsNone(msg)
         ProcessingConfig.setSettingValue(Grass7Utils.GRASS_FOLDER, folder)
 
+
     def testOtb(self):
         '''Test OTB is installed QGIS-89 (3)'''
         folder = findOtbPath()
         self.assertIsNotNone(folder)
+
 
     def testCorePluginsAreLoaded(self):
         '''Test core plugins are loaded. QGIS-55'''
         corePlugins = ['processing', 'GdalTools', 'MetaSearch', 'db_manager']
         for p in corePlugins:
             self.assertTrue(p in active_plugins)
+
 
     def testGDB(self):
         '''Test GDB format. QGIS-62'''
@@ -60,6 +64,7 @@ class PackageTests(unittest.TestCase):
                                     "ESRI_FileGDB-API_sample_Topo.gdb|layername=%s" % layername),
                                     "test", "ogr")
             self.assertTrue(layer.isValid())
+
 
     def testGeoPackage(self):
         '''Test GeoPackage'''
