@@ -11,7 +11,7 @@ import unittest
 from qgis.utils import active_plugins
 from qgis.core import QgsVectorLayer, QgsVectorFileWriter
 
-from processing.algs.saga.SagaUtils import getSagaInstalledVersion
+from processing.algs.saga.SagaUtils import getSagaInstalledVersion, findSagaFolder
 from processing.core.ProcessingConfig import ProcessingConfig
 from processing.algs.grass7.Grass7Utils import Grass7Utils
 from processing.algs.otb.OTBUtils import findOtbPath
