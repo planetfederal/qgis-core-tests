@@ -37,7 +37,7 @@ import platform
 # List of command line utilities to be tested
 COMMAND_LINE_UTILITIES = [
     'qgis --help',
-    'grass70 --help',
+    'grass72 --help',
     'ogr2ogr --help',
     'gdalinfo --help',
     'ogrinfo --help',
