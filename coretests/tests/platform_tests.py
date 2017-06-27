@@ -38,9 +38,9 @@ import platform
 COMMAND_LINE_UTILITIES = [
     'qgis --help',
     'grass72 --help',
-    'ogr2ogr --help',
-    'gdalinfo --help',
-    'ogrinfo --help',
+    'ogr2ogr --version',
+    'gdalinfo --version',
+    'ogrinfo --version',
     'cs2cs',
 ]
 
