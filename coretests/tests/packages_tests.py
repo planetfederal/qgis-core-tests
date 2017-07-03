@@ -21,8 +21,6 @@ class PackageTests(unittest.TestCase):
 
     def testSaga(self):
         '''Test SAGA is installed. QGIS-89 (1)'''
-        folder = findSagaFolder()
-        self.assertIsNotNone(folder)
         self.assertTrue(getSagaInstalledVersion(True).startswith('2.3.'))
 
     def testGrass(self):
