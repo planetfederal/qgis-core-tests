@@ -6,9 +6,6 @@
 
 from builtins import object
 
-from qgis.core import QgsMessageLog
-
-
 class CoreTestsPlugin(object):
 
     def __init__(self, iface):
@@ -19,6 +16,7 @@ class CoreTestsPlugin(object):
             from qgistester.tests import addTestModule
             addTestModule(testerplugin, "Core Tests")
         except Exception as e:
+            raise
             pass
 
     def initGui(self):

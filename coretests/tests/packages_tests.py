@@ -11,30 +11,24 @@ import unittest
 from qgis.utils import active_plugins
 from qgis.core import QgsVectorLayer, QgsVectorFileWriter
 
-from processing.algs.saga.SagaUtils import getSagaInstalledVersion, findSagaFolder
+from processing.algs.saga.SagaUtils import getInstalledVersion, findSagaFolder
 from processing.core.ProcessingConfig import ProcessingConfig
 from processing.algs.grass7.Grass7Utils import Grass7Utils
-from processing.algs.otb.OTBUtils import findOtbPath
 
 
 class PackageTests(unittest.TestCase):
 
     def testSaga(self):
         '''Test SAGA is installed. QGIS-89 (1)'''
-        self.assertTrue(getSagaInstalledVersion(True).startswith('2.3.'))
+        self.assertTrue(getInstalledVersion(True).startswith('2.3.'))
 
     def testGrass(self):
         '''Test GRASS is installed QGIS-89 (2)'''
         folder = ProcessingConfig.getSetting(Grass7Utils.GRASS_FOLDER)
         ProcessingConfig.removeSetting(Grass7Utils.GRASS_FOLDER)
-        msg = Grass7Utils.checkGrass7IsInstalled()
+        msg = Grass7Utils.checkGrassIsInstalled()
         self.assertIsNone(msg)
         ProcessingConfig.setSettingValue(Grass7Utils.GRASS_FOLDER, folder)
-
-    def testOtb(self):
-        '''Test OTB is installed QGIS-89 (3)'''
-        folder = findOtbPath()
-        self.assertIsNotNone(folder)
 
     def testCorePluginsAreLoaded(self):
         '''Test core plugins are loaded. QGIS-55'''

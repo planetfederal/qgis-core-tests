@@ -8,7 +8,7 @@ import sys
 import unittest
 
 from qgis.utils import plugins, iface
-from qgis.core import QgsDataSourceURI, QgsVectorLayer, QgsMapLayerRegistry
+from qgis.core import QgsDataSourceUri, QgsVectorLayer, QgsProject
 
 from coretests.tests.packages_tests import PackageTests
 from coretests.tests.platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
@@ -17,7 +17,7 @@ testPath = os.path.dirname(__file__)
 
 
 def _loadSpatialite():
-    uri = QgsDataSourceURI()
+    uri = QgsDataSourceUri()
     uri.setDatabase(os.path.join(os.path.dirname(__file__), "data", "elk.sqlite"))
     schema = ''
     table = 'elk'
@@ -25,7 +25,7 @@ def _loadSpatialite():
     uri.setDataSource(schema, table, geom_column)
     layer = QgsVectorLayer(uri.uri(), "test", 'spatialite')
     assert layer.isValid()
-    QgsMapLayerRegistry.instance().addMapLayer(layer)
+    QgsProject.instance().addMapLayer(layer)
 
 
 def _openDBManager():

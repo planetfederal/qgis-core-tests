@@ -15,7 +15,7 @@
 
 [general]
 name=Core QGIS tests
-qgisMinimumVersion=2.0
+qgisMinimumVersion=3.0
 description=Core tests for Tester Plugin
 about=Core QGIS tests and sample data for Tester Plugin
 version=1.0
