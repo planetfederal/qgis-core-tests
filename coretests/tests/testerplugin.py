@@ -39,24 +39,46 @@ def _openLogMessagesDialog():
 def _openAboutDialog():
     iface.actionAbout().trigger()
 
+def _addPort(url, port):
+    tokens = url.split("/")
+    tokens[2] = tokens[2] + ":" + str(port).strip()
+    return "/".join(tokens)
+
 def _loadWcs():
-    uri.setParam('url', os.getenv(TEST_WCS_URL))
-    uri.setParam("identifier", "testlayer")
-    layer = QgsRasterLayer(str(uri.encodedUri()), 'testlayer', 'wcs')
-    QgsProject.instance().addLayer(layer)
+    valid = {}
+    for port in ports:
+        try:
+            url = _addPort(os.getenv(TEST_URL) + "/wcs", port)
+            uri.setParam('url',url )
+            uri.setParam("identifier", "testlayer")
+            layer = QgsRasterLayer(str(uri.encodedUri()), 'testlayer', 'wcs')
+            valid[url] = layer.isValid()
+        except:
+            valid[url] = False
+    failed = [k for k,v in valid.items() if not v]
+    if failed:
+        raise AssertionError("Test failed for the following URLs: " + str(failed))
+
 
 def _modifyAndLoadWfs():
-    url = os.getenv(TEST_WFS_URL)
-    uri = "%s?typename=union&version=1.0.0&request=GetFeature&service=WFS" % url
-    layer = QgsVectorLayer(uri, "testlayer", "WFS")
-    featureCount = layer.featureCount()
-    featureid = list(layer.getFeatures())[0].id()
-    layer.startEditing()    
-    layer.deleteFeature(featureid)
-    layer.commitChanges()
-    layer = QgsVectorLayer(uri, "testlayer", "WFS")
-    assert layer.featureCount() == featureCount - 1
-    QgsProject.instance().addLayer(layer)
+    valid = {}
+    for port in ports:
+        try:
+            url = _addPort(os.getenv(TEST_URL) + "/wfs", port)
+            uri = "%s?typename=union&version=1.0.0&request=GetFeature&service=WFS" % url
+            layer = QgsVectorLayer(uri, "testlayer", "WFS")
+            featureCount = layer.featureCount()
+            featureid = list(layer.getFeatures())[0].id()
+            layer.startEditing()    
+            layer.deleteFeature(featureid)
+            layer.commitChanges()
+            layer = QgsVectorLayer(uri, "testlayer", "WFS")
+            valid[url] =  layer.featureCount() == featureCount - 1
+        except:
+            valid[url] = False
+    failed = [k for k,v in valid.items() if not v]
+    if failed:
+        raise AssertionError("Test failed for the following URLs: " + str(failed))
 
 def functionalTests():
     try:
@@ -102,20 +124,16 @@ def functionalTests():
     wcsTest = Test("Test WCS")
     wcsTest.addStep("Load WCS layer",
                            prestep=lambda:_loadWcs())
-    wcsTest.addStep("Check that 'test' layer is available in QGIS project",
-                           isVerifyStep=True)
 
     wfsTest = Test("Test WFS")
     wfsTest.addStep("Modify and load WFS layer",
                            prestep=lambda:_modifyAndLoadWfs())
-    wfsTest.addStep("Check that 'test' layer is available in QGIS project",
-                           isVerifyStep=True)
 
     return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest]
 
 def settings():
-    return  {"TEST_WCS_URL": TEST_WCS_URL,
-             "TEST_WFS_URL": TEST_WFS_URL}
+    return  {TEST_URL: " https://suite.boundless.test/geoserver/web/",
+            TEST_PORTS: "8080,8443"}
 
 def unitTests():
     suite = unittest.TestSuite()
