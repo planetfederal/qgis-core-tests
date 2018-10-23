@@ -15,8 +15,8 @@ from coretests.tests.platform_tests import TestImports, TestSupportedFormats, Te
 
 testPath = os.path.dirname(__file__)
 
-TEST_WCS_URL = "TEST_WCS_URL"
-TEST_WFS_URL = "TEST_WFS_URL"
+TEST_URL = "TEST_URL"
+TEST_PORTS = "TEST_PORTS"
 
 def _loadSpatialite():
     uri = QgsDataSourceUri()
@@ -46,6 +46,7 @@ def _addPort(url, port):
 
 def _loadWcs():
     valid = {}
+    ports = os.getenv(TEST_PORTS).split(",") 
     for port in ports:
         try:
             url = _addPort(os.getenv(TEST_URL) + "/wcs", port)
@@ -59,9 +60,9 @@ def _loadWcs():
     if failed:
         raise AssertionError("Test failed for the following URLs: " + str(failed))
 
-
 def _modifyAndLoadWfs():
     valid = {}
+    ports = os.getenv(TEST_PORTS).split(",")
     for port in ports:
         try:
             url = _addPort(os.getenv(TEST_URL) + "/wfs", port)
