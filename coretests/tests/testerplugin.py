@@ -44,12 +44,23 @@ def _addPort(url, port):
     tokens[2] = tokens[2] + ":" + str(port).strip()
     return "/".join(tokens)
 
+def _loadArcMap():
+    uri = "layer='2' url='https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer'"
+    layer = QgsRasterLayer(uri, 'testlayer', 'arcgismapserver')
+    assert layer.isValid()
+
+def _loadArcFeature():
+    uri = "url='https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2'"
+    layer = QgsVectorLayer(uri, 'testlayer', 'arcgisfeatureserver')
+    assert layer.isValid()
+    
 def _loadWcs():
     valid = {}
     ports = os.getenv(TEST_PORTS).split(",") 
     for port in ports:
         try:
             url = _addPort(os.getenv(TEST_URL) + "/wcs", port)
+            uri = QgsDataSourceUri()
             uri.setParam('url',url )
             uri.setParam("identifier", "testlayer")
             layer = QgsRasterLayer(str(uri.encodedUri()), 'testlayer', 'wcs')
@@ -122,15 +133,23 @@ def functionalTests():
     logTest.addStep("Check there are no errors in 'Qt' tab",
                     isVerifyStep=True)
 
+    arcmapTest = Test("Test ArcMapserver")
+    arcmapTest.addStep("Load layer",
+                           prestep=_loadArcMap)
+
+    arcfeatureTest = Test("Test ArcFeatureserver")
+    arcfeatureTest.addStep("Load layer",
+                           prestep=_loadArcFeature)
+
     wcsTest = Test("Test WCS")
     wcsTest.addStep("Load WCS layer",
-                           prestep=lambda:_loadWcs())
+                           prestep=_loadWcs)
 
     wfsTest = Test("Test WFS")
     wfsTest.addStep("Modify and load WFS layer",
-                           prestep=lambda:_modifyAndLoadWfs())
+                           prestep=_modifyAndLoadWfs)
 
-    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest]
+    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest]
 
 def settings():
     return  {TEST_URL: " https://suite.boundless.test/geoserver/web/",
