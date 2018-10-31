@@ -168,7 +168,7 @@ def _addToDbAndLoadLayer():
     assert error == QgsVectorLayerExporter.NoError
 
     uri = QgsDataSourceURI()
-    uri.setConnection(host, port, db, username, password, QgsDataSourceUri.SslRequire, authid))
+    uri.setConnection(host, port, db, username, password, QgsDataSourceUri.SslRequire, authid)
     uri.setDataSource("", "test", "geom", "", "gid")
     layer = QgsVectorLayer(uri.uri(), "testlayer", "postgres")
     assert layers.isValid()
