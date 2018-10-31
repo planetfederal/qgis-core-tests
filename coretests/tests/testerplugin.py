@@ -13,6 +13,8 @@ from qgis.core import QgsDataSourceUri, QgsVectorLayer, QgsRasterLayer, QgsProje
 from coretests.tests.packages_tests import PackageTests
 from coretests.tests.platform_tests import TestImports, TestSupportedFormats, TestOtherCommandLineUtilities
 
+from qgis.PyQt.QtNetwork import QSslCertificate
+
 testPath = os.path.dirname(__file__)
 
 TEST_URL = "TEST_URL"
@@ -28,6 +30,9 @@ def _loadSpatialite():
     layer = QgsVectorLayer(uri.uri(), "test", 'spatialite')
     assert layer.isValid()
     QgsProject.instance().addMapLayer(layer)
+
+def _loadTestLayer():
+    pass
 
 def _openDBManager():
     plugins["db_manager"].run()
@@ -91,6 +96,82 @@ def _modifyAndLoadWfs():
     failed = [k for k,v in valid.items() if not v]
     if failed:
         raise AssertionError("Test failed for the following URLs: " + str(failed))
+
+AUTHDB_MASTERPWD = "password"
+
+def _initAuthManager():
+    authm = QgsAuthManager.instance()
+    # check if QgsAuthManager has been already initialised... a side effect
+    # of the QgsAuthManager.init() is that AuthDbPath is set
+    if authm.masterPasswordIsSet():
+        msg = 'Auth master password not set from passed string'
+        assert authm.masterPasswordSame(AUTHDB_MASTERPWD), msg
+    else:
+        msg = 'Master password could not be set'
+        assert authm.setMasterPassword(AUTHDB_MASTERPWD, True), msg
+
+
+def _populatePKITestCerts():
+    removePKITestCerts()
+    assert (AUTHCFGID is None)
+    # set alice PKI data
+    pkipath = os.path.join(os.path.dirname(__file__), 'data', 'certs', 'certs-keys')
+    p_config = QgsAuthMethodConfig()
+    p_config.setName("alice")
+    p_config.setMethod('PKI-PKCS#12')
+    p_config.setUri("http://example.com")
+    p_config.setConfig("certpath", pkipath 'alice.p12'))
+    assert p_config.isValid()
+    # add authorities
+    cacerts = QSslCertificate.fromPath(os.path.join(pkipath, 'subissuer-issuer-root-ca_issuer-2-root-2-ca_chains.pem'))
+    assert cacerts is not None
+    authm.storeCertAuthorities(cacerts)
+    authm.rebuildCaCertsCache()
+    authm.rebuildTrustedCaCertsCache()
+
+    # register alice data in auth
+    authm.storeAuthenticationConfig(p_config)
+    authid = p_config.id()
+    assert (authid is not None)
+    assert (authid != '')
+    return authid
+
+def _addToDbAndLoadLayer():    
+    host = "postgis.boundless.test"
+    db = "opengeo"
+    username: "docker"
+    password = "docker"
+    port  = "55432"
+    layer = _loadTestLayer()
+
+    #No-PKI
+    uri = QgsDataSourceURI()
+    uri.setConnection(host, port, db, username, password)
+    uri.setDataSource("public", "test", "geom", "", "gid")
+    error = QgsVectorLayerExporter.exportLayer(layer, uri, "postgres", None, False, False)
+    assert error == QgsVectorLayerExporter.NoError
+
+    uri = QgsDataSourceURI()
+    uri.setConnection(host, port, db, username, password)
+    uri.setDataSource("", "test", "geom", "", "gid")
+    layer = QgsVectorLayer(uri.uri(), "testlayer", "postgres")
+    assert layers.isValid()
+
+    #PKI
+    _initAuthManager()
+    authid = _populatePKITestCerts()
+
+    uri = QgsDataSourceURI()
+    uri.setConnection(host, port, db, username, password, QgsDataSourceUri.SslRequire, authid)
+    uri.setDataSource("public", "test", "geom", "", "gid")
+    error = QgsVectorLayerExporter.exportLayer(layer, uri, "postgres", None, False, False)
+    assert error == QgsVectorLayerExporter.NoError
+
+    uri = QgsDataSourceURI()
+    uri.setConnection(host, port, db, username, password, QgsDataSourceUri.SslRequire, authid))
+    uri.setDataSource("", "test", "geom", "", "gid")
+    layer = QgsVectorLayer(uri.uri(), "testlayer", "postgres")
+    assert layers.isValid()
 
 def functionalTests():
     try:
