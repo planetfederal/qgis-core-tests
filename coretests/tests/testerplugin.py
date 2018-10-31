@@ -120,7 +120,7 @@ def _populatePKITestCerts():
     p_config.setName("alice")
     p_config.setMethod('PKI-PKCS#12')
     p_config.setUri("http://example.com")
-    p_config.setConfig("certpath", pkipath 'alice.p12'))
+    p_config.setConfig("certpath", os.path.join(pkipath 'alice.p12'))
     assert p_config.isValid()
     # add authorities
     cacerts = QSslCertificate.fromPath(os.path.join(pkipath, 'subissuer-issuer-root-ca_issuer-2-root-2-ca_chains.pem'))
