@@ -230,7 +230,11 @@ def functionalTests():
     wfsTest.addStep("Modify and load WFS layer",
                            prestep=_modifyAndLoadWfs)
 
-    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest]
+    postgisTest = Test("Test PostGIS")
+    postgisTest.addStep("Create and load PostGIS layer",
+                           prestep=_addToDbAndLoadLayer)
+
+    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest]
 
 def settings():
     return  {TEST_URL: " https://suite.boundless.test/geoserver/web/",

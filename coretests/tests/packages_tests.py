@@ -34,8 +34,7 @@ class PackageTests(unittest.TestCase):
         '''Test core plugins are loaded. QGIS-55'''
         corePlugins = ['processing', 'GdalTools', 'MetaSearch', 'db_manager']
         for p in corePlugins:
-            self.assertTrue(p in active_plugins)
-
+            self.assertTrue(p in active_plugins, "Plugin '%s' not in %s" % (p, str(active_plugins)))            
 
     def testGDB(self):
         '''Test GDB format. QGIS-62'''
@@ -46,7 +45,7 @@ class PackageTests(unittest.TestCase):
             layer = QgsVectorLayer(os.path.join(os.path.dirname(__file__), "data",
                                     "ESRI_FileGDB-API_sample_Topo.gdb|layername=%s" % layername),
                                     "test", "ogr")
-            self.assertTrue(layer.isValid())
+            self.assertTrue(layer.isValid(), "layer '%s' is not valid" % layername)
 
 
     def testGeoPackage(self):
