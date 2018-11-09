@@ -17,8 +17,7 @@ from qgis.PyQt.QtNetwork import QSslCertificate
 
 testPath = os.path.dirname(__file__)
 
-TEST_URL = "TEST_URL"
-TEST_PORTS = "TEST_PORTS"
+TEST_URLS = "TEST_URLS"
 
 def _loadSpatialite():
     uri = QgsDataSourceUri()
@@ -44,11 +43,6 @@ def _openLogMessagesDialog():
 def _openAboutDialog():
     iface.actionAbout().trigger()
 
-def _addPort(url, port):
-    tokens = url.split("/")
-    tokens[2] = tokens[2] + ":" + str(port).strip()
-    return "/".join(tokens)
-
 def _loadArcMap():
     uri = "layer='2' url='https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer'"
     layer = QgsRasterLayer(uri, 'testlayer', 'arcgismapserver')
@@ -61,10 +55,10 @@ def _loadArcFeature():
     
 def _loadWcs():
     valid = {}
-    ports = os.getenv(TEST_PORTS).split(",") 
-    for port in ports:
+    urls = os.getenv(TEST_URLS).split(",") 
+    for url in urls:
         try:
-            url = _addPort(os.getenv(TEST_URL) + "/wcs", port)
+            url = url.strip() + "/wcs"
             uri = QgsDataSourceUri()
             uri.setParam('url',url )
             uri.setParam("identifier", "testlayer")
@@ -78,10 +72,10 @@ def _loadWcs():
 
 def _modifyAndLoadWfs():
     valid = {}
-    ports = os.getenv(TEST_PORTS).split(",")
-    for port in ports:
+    urls = os.getenv(TEST_URLS).split(",") 
+    for url in urls:
         try:
-            url = _addPort(os.getenv(TEST_URL) + "/wfs", port)
+            url = url.strip() + "/wfs"
             uri = "%s?typename=union&version=1.0.0&request=GetFeature&service=WFS" % url
             layer = QgsVectorLayer(uri, "testlayer", "WFS")
             featureCount = layer.featureCount()
@@ -237,8 +231,7 @@ def functionalTests():
     return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest]
 
 def settings():
-    return  {TEST_URL: " https://suite.boundless.test/geoserver/web/",
-            TEST_PORTS: "8080,8443"}
+    return  {TEST_URLS: "https://suite.boundless.test:8080/geoserver/web/, https://suite.boundless.test:8443/geoserver/web/"}
 
 def unitTests():
     suite = unittest.TestSuite()
