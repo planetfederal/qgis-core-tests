@@ -231,7 +231,13 @@ def functionalTests():
     return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest]
 
 def settings():
-    return  {TEST_URLS: "https://suite.boundless.test:8080/geoserver/web/, https://suite.boundless.test:8443/geoserver/web/"}
+    return  {TEST_URLS: "https://suite410.boundless.test:8444/geoserver/web/, "
+                        "http://suite410.boundless.test:8082/geoserver/web/, "
+                        "https://server100.boundless.test:8445/geoserver/web/, "
+                        "http://server100.boundless.test:8084/geoserver/web/, "
+                        "https://server.boundless.test:8443/geoserver/web/, "
+                        "http://server.boundless.test:8080/geoserver/web/ "}
+
 
 def unitTests():
     suite = unittest.TestSuite()
