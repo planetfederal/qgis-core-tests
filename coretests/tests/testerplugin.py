@@ -52,10 +52,10 @@ def _loadArcFeature():
     uri = "url='https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2'"
     layer = QgsVectorLayer(uri, 'testlayer', 'arcgisfeatureserver')
     assert layer.isValid()
-    
+
 def _loadWcs():
     valid = {}
-    urls = os.getenv(TEST_URLS).split(",") 
+    urls = os.getenv(TEST_URLS).split(",")
     for url in urls:
         try:
             url = url.strip() + "/wcs"
@@ -72,7 +72,7 @@ def _loadWcs():
 
 def _modifyAndLoadWfs():
     valid = {}
-    urls = os.getenv(TEST_URLS).split(",") 
+    urls = os.getenv(TEST_URLS).split(",")
     for url in urls:
         try:
             url = url.strip() + "/wfs"
@@ -80,7 +80,7 @@ def _modifyAndLoadWfs():
             layer = QgsVectorLayer(uri, "testlayer", "WFS")
             featureCount = layer.featureCount()
             featureid = list(layer.getFeatures())[0].id()
-            layer.startEditing()    
+            layer.startEditing()
             layer.deleteFeature(featureid)
             layer.commitChanges()
             layer = QgsVectorLayer(uri, "testlayer", "WFS")
@@ -130,7 +130,7 @@ def _populatePKITestCerts():
     assert (authid != '')
     return authid
 
-def _addToDbAndLoadLayer():    
+def _addToDbAndLoadLayer():
     host = "postgis.boundless.test"
     db = "opengeo"
     username: "docker"
@@ -173,7 +173,7 @@ def functionalTests():
     except:
         return []
 
-    spatialiteTest = Test("Test Spatialite. QGIS-72")
+    spatialiteTest = Test("Test Spatialite. QGIS-120")
     spatialiteTest.addStep("Load Spatialite layer",
                            prestep=lambda:_loadSpatialite())
     spatialiteTest.addStep("Open DB Manager",
