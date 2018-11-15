@@ -173,6 +173,22 @@ def functionalTests():
     except:
         return []
 
+    logTest = Test("Verify in-app message log has no errors for default install. QGIS-62")
+    logTest.addStep("Open log messages panel",
+                    prestep=lambda:_openLogMessagesDialog())
+    logTest.addStep("Review 'General' tab output. Check it has no issues",
+                    isVerifyStep=True)
+    logTest.addStep("Check there are no errors in 'Plugins' tab",
+                    isVerifyStep=True)
+    logTest.addStep("If exists, check there are no errors in 'Python warning' tab",
+                    isVerifyStep=True)
+    logTest.addStep("If exists, check there are no errors in 'Qt' tab",
+                    isVerifyStep=True)
+    logTest.addStep("Review the Init Script, check there are no errors in 'Qt' tab",
+                    isVerifyStep=True)
+    logTest.addStep("Review any other existing tabs, check that there are no errors",
+                    isVerifyStep=True)
+
     spatialiteTest = Test("Test Spatialite. QGIS-120")
     spatialiteTest.addStep("Load Spatialite layer",
                            prestep=lambda:_loadSpatialite())
@@ -197,16 +213,6 @@ def functionalTests():
     aboutTest.addStep("Verify that content of the About dialog matches"
                       "following data\n{}\n\n".format(data),
                       isVerifyStep=True)
-
-    logTest = Test("Verify in-app message log has no errors for default install. QGIS-54")
-    logTest.addStep("Open log messages panel",
-                    prestep=lambda:_openLogMessagesDialog())
-    logTest.addStep("Review 'General' tab output. Check it has no issues",
-                    isVerifyStep=True)
-    logTest.addStep("Check there are no errors in 'Plugins' tab",
-                    isVerifyStep=True)
-    logTest.addStep("Check there are no errors in 'Qt' tab",
-                    isVerifyStep=True)
 
     arcmapTest = Test("Test ArcMapserver")
     arcmapTest.addStep("Load layer",
