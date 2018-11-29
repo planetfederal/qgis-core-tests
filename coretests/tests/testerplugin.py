@@ -91,6 +91,16 @@ def _modifyAndLoadWfs():
     if failed:
         raise AssertionError("Test failed for the following URLs: " + str(failed))
 
+def _loadWfsToBeEdited():
+    valid = {}
+    url = os.getenv(TEST_URLS).split(",")[0] + + "/wfs"        
+    url = url.strip() + "/wfs"
+    uri = "%s?typename=usa:states&version=1.0.0&request=GetFeature&service=WFS&username=admin&password=geoserver" % url
+    layer = QgsVectorLayer(uri, "testlayer", "WFS")
+    if not layer.isValid():
+        raise AssertionError("Test failed loading WFS layer")
+
+
 AUTHDB_MASTERPWD = "password"
 
 def _initAuthManager():
@@ -234,7 +244,45 @@ def functionalTests():
     postgisTest.addStep("Create and load PostGIS layer",
                            prestep=_addToDbAndLoadLayer)
 
-    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest]
+    offlineTest = Test("WFS Smoke Test (Server) - Offline Editing")
+    offlineTest.addStep("Load WFS layer layer",
+                           prestep=_loadWfsToBeEdited)
+    offlineTest.addStep("Enable *Offline editing* plugin from *Plugins > Manage and install plugins* in the *Installed* tab.",
+                           isVerifyStep=True)
+    offlineTest.addStep("Convert the project to an offline project by selecting *Database > Offline editing > Convert to offline project*. Keep the layer selected and click *OK*.",
+                           isVerifyStep=True)
+    offlineTest.addStep("Enable editing on the recently added layer. Activate the layer in the *Layers* panel and enable editing."
+                        " In the *Digitizing toolbar* (in the second row of menu icons), click the *Toggle editing* icon (it's a pencil)"
+                         "or from menus go to *Layer > Toogle Editing* This will allow you to edit the layer.",
+                           isVerifyStep=True)
+    offlineTest.addStep("Click the *Add Feature* icon in the same toolbar.",
+                           isVerifyStep=True)
+    offlineTest.addStep('''
+Click once anywhere in the viewer window - this sets the first vertex of the polygon. Keep clicking other places to add more vertices.
+
+*on OS X*:
+to finish the polygon hold the control key down and click (this will add one last vertex).
+
+*on Windows*:
+use the right mouse button to end (no other vertex is added).
+
+When you complete the polygon a *Feature Attributes* dialog will pop-up.
+
+Simply click the *Ok* button to dismiss it.
+''',
+                           isVerifyStep=True)
+    offlineTest.addStep("Click the *Save Layer Edits* icon or go to *Layer > Save Layer Edits* menu.",
+                           isVerifyStep=True)
+    offlineTest.addStep("Click the *Toggle Editing* icon or select the 'Toggle Editing' menu item under Layer.",
+                           isVerifyStep=True)
+    offlineTest.addStep("Sync the project by selecting *Database > Offline editing > Synchronize*",
+                           isVerifyStep=True)    
+    offlineTest.addStep("Verify that your changes were stored on the GeoServer.",
+                           isVerifyStep=True)    
+    offlineTest.addStep("Sync the project by selecting *Database > Offline editing > Synchronize*",
+                           isVerifyStep=True)    
+
+    return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest, offlineTest]
 
 def settings():
     return  {TEST_URLS: "https://suite410.boundless.test:8444/geoserver/web/, "
