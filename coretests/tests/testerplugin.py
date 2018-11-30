@@ -91,12 +91,12 @@ def _modifyAndLoadWfs():
     if failed:
         raise AssertionError("Test failed for the following URLs: " + str(failed))
 
-def _loadWfsToBeEdited():
+def _loadWfsToBeEdited(name="testlayer"):
     valid = {}
     url = os.getenv(TEST_URLS).split(",")[0] + + "/wfs"        
     url = url.strip() + "/wfs"
     uri = "%s?typename=usa:states&version=1.0.0&request=GetFeature&service=WFS&username=admin&password=geoserver" % url
-    layer = QgsVectorLayer(uri, "testlayer", "WFS")
+    layer = QgsVectorLayer(uri, name, "WFS")
     if not layer.isValid():
         raise AssertionError("Test failed loading WFS layer")
 
@@ -277,10 +277,8 @@ Simply click the *Ok* button to dismiss it.
                            isVerifyStep=True)
     offlineTest.addStep("Sync the project by selecting *Database > Offline editing > Synchronize*",
                            isVerifyStep=True)    
-    offlineTest.addStep("Verify that your changes were stored on the GeoServer.",
-                           isVerifyStep=True)    
-    offlineTest.addStep("Sync the project by selecting *Database > Offline editing > Synchronize*",
-                           isVerifyStep=True)    
+    offlineTest.addStep("Verify that your changes were stored on the GeoServer. Compare the edited layer with the new one, and verify that they are identical.",
+                           prestep= lambda: _loadWfsToBeEdited("testlayer_afterediting"), isVerifyStep=True)    
 
     return [spatialiteTest, logTest, aboutTest, wcsTest, wfsTest, arcmapTest, arcfeatureTest, postgisTest, offlineTest]
 
