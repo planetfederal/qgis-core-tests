@@ -25,14 +25,17 @@ class PackageTests(unittest.TestCase):
     def testGrass(self):
         '''Test GRASS is installed QGIS-89 (2)'''
         folder = ProcessingConfig.getSetting(Grass7Utils.GRASS_FOLDER)
-        ProcessingConfig.removeSetting(Grass7Utils.GRASS_FOLDER)
+        try:
+            ProcessingConfig.removeSetting(Grass7Utils.GRASS_FOLDER)
+        except KeyError:
+            pass
         msg = Grass7Utils.checkGrassIsInstalled()
         self.assertIsNone(msg)
         ProcessingConfig.setSettingValue(Grass7Utils.GRASS_FOLDER, folder)
 
     def testCorePluginsAreLoaded(self):
         '''Test core plugins are loaded. QGIS-55'''
-        corePlugins = ['processing', 'GdalTools', 'MetaSearch', 'db_manager']
+        corePlugins = ['processing', 'MetaSearch', 'db_manager']
         for p in corePlugins:
             self.assertTrue(p in active_plugins, "Plugin '%s' not in %s" % (p, str(active_plugins)))            
 
