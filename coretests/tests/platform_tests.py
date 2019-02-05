@@ -293,7 +293,7 @@ class TestSupportedFormats(unittest.TestCase):
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         out, err = process.communicate()
-        formats = [f.strip().split(' ')[0] for f in out.split("\n")[1:] if f]
+        formats = [f.strip().split(' ')[0] for f in out.decode("UTF-8").split("\n")[1:] if f]
         for f in GDAL_EXPECTED_FORMATS:
             self.assertTrue(f in formats, "GDAL Format %s is not supported!" % f)
 
